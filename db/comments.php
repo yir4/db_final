@@ -1,6 +1,6 @@
 <?
 include("BaseModel.php");
-class Users extends BaseModel {
+class Comments extends BaseModel {
 
     public function __construct($params) {
         parent::__construct();
@@ -8,16 +8,14 @@ class Users extends BaseModel {
         $this->$func($params);
     }
 
-    public function login($params) {
+    public function getComments($params) {
         $queries = $params['params'];
-        $email = $queries['email'];
-        $password = $queries['password'];
-        $sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-        $res = $this->queryArray($sql);
+        $userid = $queries['userid'];
+        $sql = "SELECT * FROM comments WHERE userid = $userid";
+        $res = $this->queryArrays($sql);
         if ($res) {
             $result['code'] = 200;
             $result['data'] = $res;
-            $result['perm'] = 2;
         } else {
             $result['code'] = 404;
         }

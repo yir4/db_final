@@ -48,11 +48,11 @@
               var res = JSON.parse(data);
               if (res.code == 200) {
                   if (res.perm == 3) {
-                      $(location).attr('href','web/dashboard-admin.html');
+                      $(location).attr('href','web/dashboard-admin.html?userid='+res.data.userid);
                   } else if (res.perm == 2) {
-                      $(location).attr('href','web/dashboard-sales.html');
+                      $(location).attr('href','web/dashboard-sales.html?userid=1');
                   } else if (res.perm == 1) {
-                      $(location).attr('href','web/dashboard-customers.html');
+                      $(location).attr('href','web/dashboard-customers.html?userid=1');
                   }
               } else {
                   console.log('fail to log-in');

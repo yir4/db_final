@@ -5,9 +5,14 @@ switch ($r['model']) {
     case "users":
         include_once('users.php');
         return new Users($r);
-        break;
+    case "comments":
+        include_once('comments.php');
+        return new Comments($r);
+    case "orders":
+        include_once('orders.php');
+        return new Orders($r);
     default:
-        echo "Your favorite color is neither red, blue, nor green!";
+        echo "You forgot to include the php file";
 }
 
 function serializeURL() {
