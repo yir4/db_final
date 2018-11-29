@@ -1,16 +1,16 @@
-function Tabs(perm) {
+function Tabs(perm, active_idx) {
     var tabs;
     if (perm == 3) {
         tabs = [
                     {
                         title: "Dashboard",
                         icon: "users",
-                        link: '/dashboard-sales'
+                        link: './dashboard-sales.html'
                     },
                    {
                        title: "Orders",
                        icon: "users",
-                       link: '/dashboard-sales'
+                       link: './dashboard-sales.html'
                    },
                    {
                        title: "Comments",
@@ -33,17 +33,17 @@ function Tabs(perm) {
                    {
                        title: "Comments",
                        icon: "users",
-                       link: '/dashboard-sales'
+                       link: './dashboard-sales.html'
                    },
                    {
                        title: "Orders",
                        icon: "users",
-                       link: '#'
+                       link: './orders-list.html'
                    },
                    {
                        title: "Customers Info",
                        icon: "users",
-                       link: './dashboard-admin.html'
+                       link: './customers-list.html'
                    }
                ];
     } else if (perm == 1) {
@@ -51,7 +51,7 @@ function Tabs(perm) {
                    {
                        title: "Comments",
                        icon: "users",
-                       link: '/dashboard-sales'
+                       link: './dashboard-sales.html'
                    },
                    {
                        title: "Orders",
@@ -61,7 +61,7 @@ function Tabs(perm) {
                    {
                        title: "Customers Info",
                        icon: "users",
-                       link: './dashboard-admin.html'
+                       link: './customers-list.html'
                    }
                ];
     } else {
@@ -74,7 +74,8 @@ function Tabs(perm) {
     {
         var li=document.createElement('li');
         li.className = "nav-item";
-        if (i == 0) {
+        console.log(active_idx);
+        if (i == active_idx) {
             li.innerHTML="<a class=\"nav-link active\" href="+tabs[i].link+"><span data-feather="+tabs[i].icon+"></span>"+tabs[i].title+"</a>";
         } else {
             li.innerHTML="<a class=\"nav-link\" href="+tabs[i].link+"><span data-feather="+tabs[i].icon+"></span>"+tabs[i].title+"</a>";
@@ -83,4 +84,11 @@ function Tabs(perm) {
     }
     document.getElementById('side-menu').appendChild(ul);
 
+    function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+            vars[key] = value;
+        });
+        return vars;
+    }
 }

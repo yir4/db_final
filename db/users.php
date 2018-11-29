@@ -17,7 +17,7 @@ class Users extends BaseModel {
         if ($res) {
             $result['code'] = 200;
             $result['data'] = $res;
-            $result['perm'] = 2;
+            $result['perm'] = 1;
         } else {
             $result['code'] = 404;
         }

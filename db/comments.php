@@ -21,4 +21,18 @@ class Comments extends BaseModel {
         }
         echo json_encode($result);
     }
+
+    public function getCommentDetail($params) {
+        $queries = $params['params'];
+        $userid = $queries['userid'];
+        $sql = "SELECT * FROM comments WHERE userid = $userid";
+        $res = $this->queryArrays($sql);
+        if ($res) {
+            $result['code'] = 200;
+            $result['data'] = $res;
+        } else {
+            $result['code'] = 404;
+        }
+        echo json_encode($result);
+    }
 }
