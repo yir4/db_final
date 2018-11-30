@@ -7,9 +7,9 @@ class Acl extends BaseModel {
        parent::__construct();
    }
 
-    function check($permission,$userid,$group_id) {
+    function check($permission,$user_id,$group_id) {
         //we check the user permissions first
-        if(!$this->user_permissions($permission,$userid)) {
+        if(!$this->user_permissions($permission,$user_id)) {
             return false;
         }
         // if(!$this->group_permissions($permission,$group_id) & $this->isUserEmpty()) {
@@ -18,10 +18,10 @@ class Acl extends BaseModel {
         return true;
     }
 
-    function user_permissions($permission,$userid) {
-        $users = $this->db->query("SELECT COUNT(*) AS count FROM user_permissions WHERE permission_name='$permission' AND userid='$userid' ");
+    function user_permissions($permission,$user_id) {
+        $users = $this->db->query("SELECT COUNT(*) AS count FROM user_permissions WHERE permission_name='$permission' AND user_id='$user_id' ");
         // if($users['count']>0) {
-        //     $result = $this->db->query("SELECT * FROM user_permissions WHERE permission_name='$permission' AND userid='$userid' ");
+        //     $result = $this->db->query("SELECT * FROM user_permissions WHERE permission_name='$permission' AND user_id='$user_id' ");
         //     $f = $this->db->f();
         //     if($f['permission_type']==0) {
         //         return false;

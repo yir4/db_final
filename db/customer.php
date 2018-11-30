@@ -1,6 +1,6 @@
-<?
+<? //customer
 include("BaseModel.php");
-class Orders extends BaseModel {
+class Customer extends BaseModel {
 
     public function __construct($params) {
         parent::__construct();
@@ -8,10 +8,10 @@ class Orders extends BaseModel {
         $this->$func($params);
     }
 
-    public function getOrders($params) {
+    public function getCustomers($params) {
         $queries = $params['params'];
         $user_id = $queries['user_id'];
-        $sql = "SELECT * FROM orders WHERE user_id = $user_id";
+        $sql = "SELECT * FROM customer WHERE sales_id = $user_id";
         $res = $this->queryArrays($sql);
         if ($res) {
             $result['code'] = 200;

@@ -1,4 +1,5 @@
 function Tabs(perm, active_idx) {
+    var user = JSON.parse(localStorage.getItem('user'));
     var tabs;
     if (perm == 3) {
         tabs = [
@@ -33,17 +34,17 @@ function Tabs(perm, active_idx) {
                    {
                        title: "Comments",
                        icon: "users",
-                       link: './dashboard-sales.html'
+                       link: './dashboard-sales.html?sales_id='+user['data']['sales_id']
                    },
                    {
                        title: "Orders",
                        icon: "users",
-                       link: './orders-list.html'
+                       link: './orders-list.html?sales_id='+user['data']['sales_id']
                    },
                    {
                        title: "Customers Info",
                        icon: "users",
-                       link: './customers-list.html'
+                       link: './customers-list.html?sales_id='+user['data']['sales_id']
                    }
                ];
     } else if (perm == 1) {
@@ -51,17 +52,17 @@ function Tabs(perm, active_idx) {
                    {
                        title: "Comments",
                        icon: "users",
-                       link: './dashboard-sales.html'
+                       link: './dashboard-sales.html?customer_id='+user['data']['customer_id']
                    },
                    {
                        title: "Orders",
                        icon: "users",
-                       link: '#'
+                       link: '#'//'./dashboard-sales.html?customer_id='+user['data']['customer_id']
                    },
                    {
                        title: "Customers Info",
                        icon: "users",
-                       link: './customers-list.html'
+                       link: '#'//'./customers-list.html?customer_id='+user['data']['customer_id']
                    }
                ];
     } else {

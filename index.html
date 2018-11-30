@@ -24,8 +24,8 @@
     <form class="form-signin">
       <!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-      <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+      <label for="inputUsername" class="sr-only">Username</label>
+      <input type="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
       <label for="inputPassword" class="sr-only">Password</label>
       <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
       <div class="checkbox mb-3">
@@ -38,21 +38,27 @@
   </body>
   <script type="text/javascript">
       function login() {
-          var email = document.getElementById('inputEmail').value;
+          var username = document.getElementById('inputUsername').value;
           var password = document.getElementById('inputPassword').value;
 
           $.ajax({
-            url: "db/index.php/users/login?email="+email+"&password="+password
+            url: "db/index.php/users/login?username="+username+"&password="+password
           }).done(function(data) {
-              console.log(data);
+              // console.log("login result:"+data);
               var res = JSON.parse(data);
+              if (localStorage) {
+                  localStorage.setItem('user', data);
+                  var user = JSON.parse(localStorage.getItem('user'));
+                } else {
+                    alert("No support. Use a fallback such as browser cookies or store on the server.");
+              }
               if (res.code == 200) {
                   if (res.perm == 3) {
-                      $(location).attr('href','web/admin/dashboard-admin.html?userid='+res.data.userid);
+                      $(location).attr('href','web/admin/dashboard-admin.html?user_id='+res.data.user_id);
                   } else if (res.perm == 2) {
-                      $(location).attr('href','web/sales/dashboard-sales.html?userid=1');
+                      $(location).attr('href','web/sales/dashboard-sales.html?sales_id='+res.data.sales_id);
                   } else if (res.perm == 1) {
-                      $(location).attr('href','web/customers/dashboard-customers.html?userid=1');
+                      $(location).attr('href','web/customers/dashboard-customers.html?customer_id='+res.data.customer_id);
                   }
               } else {
                   console.log('fail to log-in');

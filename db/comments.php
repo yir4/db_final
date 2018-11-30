@@ -10,8 +10,8 @@ class Comments extends BaseModel {
 
     public function getComments($params) {
         $queries = $params['params'];
-        $userid = $queries['userid'];
-        $sql = "SELECT * FROM comments WHERE userid = $userid";
+        $sales_id = $queries['sales_id'];
+        $sql = "SELECT * FROM comments WHERE sales_id = $sales_id";
         $res = $this->queryArrays($sql);
         if ($res) {
             $result['code'] = 200;
@@ -24,8 +24,8 @@ class Comments extends BaseModel {
 
     public function getCommentDetail($params) {
         $queries = $params['params'];
-        $userid = $queries['userid'];
-        $sql = "SELECT * FROM comments WHERE userid = $userid";
+        $user_id = $queries['user_id'];
+        $sql = "SELECT * FROM comments WHERE user_id = $user_id";
         $res = $this->queryArrays($sql);
         if ($res) {
             $result['code'] = 200;
