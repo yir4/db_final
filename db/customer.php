@@ -8,10 +8,10 @@ class Customer extends BaseModel {
         $this->$func($params);
     }
 
-    public function getCustomers($params) {
+    public function getCustomersBySales($params) {
         $queries = $params['params'];
-        $user_id = $queries['user_id'];
-        $sql = "SELECT * FROM customer WHERE sales_id = $user_id";
+        $sales_id = $queries['sales_id'];
+        $sql = "SELECT * FROM customer WHERE sales_id = $sales_id";
         $res = $this->queryArrays($sql);
         if ($res) {
             $result['code'] = 200;

@@ -11,6 +11,9 @@ switch ($r['model']) {
     case "orders":
         include_once('orders.php');
         return new Orders($r);
+    case "customer":
+        include_once('customer.php');
+        return new Customer($r);
     default:
         echo "You forgot to include the php file";
 }
