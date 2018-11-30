@@ -92,14 +92,6 @@
        var tableName = '#comments-list';
        var params;
        render();
-       if (localStorage) {
-           var user = JSON.parse(localStorage.getItem('user'));
-           console.log(user['perm']);
-           // LocalStorage is supported!
-         } else {
-             console.log("No support. Use a fallback such as browser cookies or store on the server.");
-           // No support. Use a fallback such as browser cookies or store on the server.
-       }
        function render() {
            var params = getUrlVars();
            console.log(params['sales_id']);

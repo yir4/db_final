@@ -8,12 +8,20 @@ class Orders extends BaseModel {
         $this->$func($params);
     }
 
-    public function getOrders($params) {
+    public function getOrdersBySales($params) {
         $queries = $params['params'];
-        $user_id = $queries['user_id'];
-        $sql = "SELECT * FROM orders WHERE user_id = $user_id";
+        $sales_id = $queries['sales_id'];
+        $sql = "SELECT customer_id FROM customer WHERE sales_id = $sales_id";
         $res = $this->queryArrays($sql);
+
         if ($res) {
+            foreach ($res as $customer) {
+                $customers[] = $customer['customer_id'];
+            }
+            $p = implode(', ', $customers);
+            $sql = "SELECT * FROM orders WHERE customer_id IN ($p)";
+            $res = $this->queryArrays($sql);
+
             $result['code'] = 200;
             $result['data'] = $res;
         } else {
