@@ -11,6 +11,7 @@
     <!-- Bootstrap core CSS -->
     <link href="../dist/css/bootstrap.min.css" rel="stylesheet">
     <script type="text/javascript" src="../js/tabs.js"></script>
+    <script type="text/javascript" src="../js/user.js"></script>
     <!-- Custom styles for this template -->
     <link href="../css/dashboard.css" rel="stylesheet">
   </head>
@@ -20,7 +21,7 @@
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-          <a class="nav-link" href="../../index.html">Sign out</a>
+          <a class="nav-link" href="../../index.html" onclick="User.logout()">Sign out</a>
         </li>
       </ul>
     </nav>
@@ -115,6 +116,59 @@
             </div>
           </div>
         </div>
+
+        <!-- update Order Modal -->
+        <div id="editOrder" class="modal fade" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Update Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <div class="col-md-12">
+                      <form>
+                          <div class="form-group">
+                              <label for="business_nameU" class="col-form-label">Business name:</label>
+                              <input class="form-control" id="business_nameU">
+                          </div>
+                          <div class="form-group">
+                              <label for="addr_stree" class="col-form-label">Street:</label>
+                              <input class="form-control" id="addr_streeU">
+                          </div>
+                          <div class="form-group">
+                              <div class="dropdown">
+                                  <label for="dropdownCategory" class="col-form-label">Category:</label>
+                                  <button id="dropdownCategory" class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Choose category
+                                  </button>
+                                  <div id="dropdownCategoryContent" class="dropdown-menu dropdown-menu-cate" aria-labelledby="dropdownMenuButton">
+                                  </div>
+                                </div>
+                          </div>
+                          <div class="form-group">
+                              <div class="dropdown">
+                                  <label for="dropdownCategory" class="col-form-label">Category:</label>
+                                  <button id="dropdownSubcategory" class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Choose subcategory
+                                  </button>
+                                  <div id="dropdownSubcategoryContent" class="dropdown-menu dropdown-menu-subcate" aria-labelledby="dropdownMenuButton">
+                                  </div>
+                                </div>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="updateOrderDetail()">Update</button>
+              </div>
+            </div>
+          </div>
+        </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -134,7 +188,11 @@
         var params;
         var user = JSON.parse(localStorage.getItem('user'));
         var cur_order_id;
+        var categorys;
+        var subcategorys;
         render();
+        getCategory();
+        getSubcategory();
        function render() {
            params = getUrlVars();
            console.log(params['sales_id']);
@@ -169,13 +227,44 @@
                 row.append($("<td>" + rowData.customer_id + "</td>"));
                 row.append($("<td>" + rowData.price + "</td>"));
                 row.append($("<td>" + rowData.timestamp + "</td>"));
-                row.append($("<td><a href=\"#\" onclick=\"getOrderDetail('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View Detail</a></td>"));
+                row.append($("<div><td><a href=\"#\" onclick=\"getOrderDetail('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View</a>"+
+                                       "<a href=\"#\" style=\"margin-left:8px\" onclick=\"getOrderDetailwithoutComments('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#editOrder\">Edit</a></td></div>"));
             } else {
                 row.append($("<td>" + rowData.contact_name + "</td>"));
                 row.append($("<td>" + rowData.comment_text + "</td>"));
                 row.append($("<td>" + rowData.comment_time + "</td>"));
             }
        }
+
+        function updateOrderDetail() {
+            console.log("updateOrderDetail");
+        }
+
+        function getOrderDetailwithoutComments(order_id) {
+            cur_order_id = order_id;
+            $.ajax({
+              url: "../../db/index.php/orders/getOrderDetailNoComments?order_id="+order_id
+            }).done(function(data) {
+                console.log(data);
+                //<a class="dropdown-item" href="#">woven</a>
+                // var commentTable = '#comments-list';
+                //  clearTable(commentTable);
+                //  var res = JSON.parse(data);
+                //  if (res.code == 200) {
+                //      drawTable(commentTable, res.data.comments);
+                //      $("#productName").text(res.data.product_name);
+                //      $("#orderTime").text(res.data.timestamp); //orderStatus
+                //      $("#orderStatus").text(res.data.status);
+                //      $("#categoryName").text(res.data.category_name);
+                //      $("#subcategoryName").text(res.data.sub_category_name);
+                //      $("#quantityNum").text(res.data.quantity);
+                //      $("#singlePrice").text(res.data.single_price);
+                //      $("#totalPrice").text(res.data.total_price);
+                //  } else {
+                //      console.log('fail to load comments');
+                //  }
+            });
+        }
 
         function getOrderDetail(order_id) {
             cur_order_id = order_id;
@@ -229,6 +318,40 @@
             saveData.error(function(e) { alert("Something went wrong: "+e); });
         }
 
+        function getCategory() {
+            $.ajax({
+              url: "../../db/index.php/category/getCategory"
+            }).done(function(data) {
+                // console.log(data);
+                 var res = JSON.parse(data);
+                 if (res.code == 200) {
+                     categorys = res.data;
+                     var dropdown = $('#dropdownCategoryContent');
+                     for( i = 0 ; i < categorys.length ; i++ ) {
+                         dropdown.append(
+                             $('<a class="dropdown-item" href="#"></a>').val(categorys[i].category_id).html(categorys[i].category_name)
+                         );
+                     }
+                 } else {
+                     console.log('fail to load category');
+                 }
+            });
+        }
+
+        function getSubcategory() {
+            $.ajax({
+              url: "../../db/index.php/subcategory/getSubategory"
+            }).done(function(data) {
+                // console.log(data);
+                 var res = JSON.parse(data);
+                 if (res.code == 200) {
+                     subcategorys = res.data;
+                 } else {
+                     console.log('fail to load category');
+                 }
+            });
+        }
+
        function getUrlVars() {
            var vars = {};
            var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
@@ -236,6 +359,31 @@
            });
            return vars;
        }
+
+       $(function(){
+        $(".dropdown-menu-cate").on('click', 'a', function(){
+            $("#dropdownCategory").text($(this).text());
+            $("#dropdownCategory").val($(this).val());
+            var dropdown = $('#dropdownSubcategoryContent');
+            dropdown.empty();
+            $("#dropdownSubcategory").text("Choose subcategory");
+            $("#dropdownSubcategory").val(null);
+            for( i = 0 ; i < subcategorys.length ; i++ ) {
+                if (subcategorys[i].category_id == $(this).val()) {
+                    dropdown.append(
+                        $('<a class="dropdown-item" href="#"></a>').val(subcategorys[i].sub_category_id).html(subcategorys[i].sub_category_name)
+                    );
+                }
+            }
+            });
+        });
+
+        $(function(){
+         $(".dropdown-menu-subcate").on('click', 'a', function(){
+             $("#dropdownSubcategory").text($(this).text());
+             $("#dropdownSubcategory").val($(this).val());
+             });
+         });
     </script>
   </body>
 </html>

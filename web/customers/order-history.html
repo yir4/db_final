@@ -12,6 +12,7 @@
     <!-- Bootstrap core CSS -->
     <link href="../dist/css/bootstrap.min.css" rel="stylesheet">
     <script type="text/javascript" src="../js/tabs.js"></script>
+    <script type="text/javascript" src="../js/user.js"></script>
     <!-- Custom styles for this template -->
     <link href="../css/dashboard.css" rel="stylesheet">
   </head>
@@ -21,7 +22,7 @@
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-          <a class="nav-link" href="../../index.html">Sign out</a>
+          <a class="nav-link" href="../../index.html" onclick="User.logout()">Sign out</a>
         </li>
       </ul>
     </nav>
@@ -30,7 +31,7 @@
       <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
             <div id="side-menu" class="sidebar-sticky">
-                <script>new Tabs(1, 0);</script>
+                <script>new Tabs(1, 2);</script>
             </div>
         </nav>
 

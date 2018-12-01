@@ -11,6 +11,7 @@
     <!-- Bootstrap core CSS -->
     <link href="../dist/css/bootstrap.min.css" rel="stylesheet">
     <script type="text/javascript" src="../js/tabs.js"></script>
+    <script type="text/javascript" src="../js/user.js"></script>
     <!-- Custom styles for this template -->
     <link href="../css/dashboard.css" rel="stylesheet">
   </head>
@@ -20,7 +21,7 @@
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-          <a class="nav-link" href="../../index.html">Sign out</a>
+          <a class="nav-link" href="../../index.html" onclick="User.logout()">Sign out</a>
         </li>
       </ul>
     </nav>
@@ -88,7 +89,7 @@
                   </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -158,7 +159,6 @@
             </div>
           </div>
         </div>
-
 
         <!-- update Customer Modal -->
         <div id="editUserModal" class="modal fade" role="dialog">
@@ -281,7 +281,7 @@
            row.append($("<td>" + rowData.contact_name + "</td>"));
            row.append($("<td>" + rowData.phone + "</td>"));
            row.append($("<div><td><a href=\"#\" onclick=\"getUserDetail('"+rowData.customer_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View</a></td>"+
-                             "<td><a href=\"#\" style=\"margin-left:4px\" onclick=\"fillUserDetail('"+rowData.customer_id+"');\" data-toggle=\"modal\" data-target=\"#editUserModal\">Edit</a></td></div>"));
+                             "<td><a href=\"#\" style=\"margin-left:8px\" onclick=\"fillUserDetail('"+rowData.customer_id+"');\" data-toggle=\"modal\" data-target=\"#editUserModal\">Edit</a></td></div>"));
 
        }
 

@@ -49,4 +49,21 @@ class Orders extends BaseModel {
         }
         echo json_encode(['code'=>404, 'meesage'=>'NO DATA']);
     }
+
+    public function getOrderDetailNoComments($params) {
+        $queries = $params['params'];
+        $order_id = $queries['order_id'];
+        $sql = "SELECT a.price AS total_price, a.status, a.timestamp, b.quantity, c.product_name, c.price AS single_price, d.category_name, e.sub_category_name
+                FROM orders AS a, orders_detail AS b, product AS c, category AS d, sub_category AS e
+                WHERE a.order_id = b.order_id AND b.product_id = c.product_id AND c.sub_category_id = e.sub_category_id AND d.category_id = e.category_id AND a.order_id = $order_id";
+        $orderDetail = $this->queryArray($sql);
+
+        if ($orderDetail) {
+            $result['code'] = 200;
+            $result['data'] = $orderDetail;
+            echo json_encode($result);
+            exit;
+        }
+        echo json_encode(['code'=>404, 'meesage'=>'NO DATA']);
+    }
 }

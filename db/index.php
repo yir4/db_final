@@ -22,6 +22,12 @@ switch ($r['model']) {
     case "products":
         include_once('products.php');
         return new Products($r);
+    case "category":
+        include_once('category.php');
+        return new Category($r);
+    case "subcategory":
+        include_once('subcategory.php');
+        return new Subcategory($r);
     default:
         echo "You forgot to include the php file";
 }
