@@ -98,7 +98,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
+                <button type="button" class="btn btn-primary" onclick="postComment()">Send message</button>
               </div>
             </div>
           </div>
@@ -121,10 +121,10 @@
         var tableName = '#orders-list';
         var params;
         var user = JSON.parse(localStorage.getItem('user'));
+        var cur_order_id;
         render();
-
        function render() {
-           var params = getUrlVars();
+           params = getUrlVars();
            console.log(params['sales_id']);
            $.ajax({
              url: "../../db/index.php/orders/getOrdersBySales?sales_id="+params['sales_id']
@@ -159,8 +159,32 @@
            row.append($("<td><a href=\"#\" onclick=\"getCommentDetail('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View Detail</a></td>"));
        }
 
-        function getCommentDetail() {
+        function getCommentDetail(order_id) {
+            cur_order_id = order_id;
 
+        }
+
+        function postComment() {
+            var text = $('textarea#message-text').val();
+            var data = { "order_id": cur_order_id, "sales_id": params['sales_id'], "comment_text": text};
+            var saveData = $.ajax({
+                  type: 'POST',
+                  url: "../../db/index.php/comments/postComment",
+                  data: data,
+                  dataType: "text",
+                  success: function(resultData) {
+                    console.log("Save Complete: "+resultData);
+                    var res = JSON.parse(resultData);
+                    if (res.code == 200) {
+                        // refresh page
+                        // TODO: pop up modal view
+                        location.reload();
+                    } else {
+                        console.log('fail to load comments');
+                    }
+                  }
+            });
+            saveData.error(function(e) { alert("Something went wrong: "+e); });
         }
 
        function getUrlVars() {

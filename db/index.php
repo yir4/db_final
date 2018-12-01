@@ -1,6 +1,11 @@
 <?
-// $result = getModel();
 $r = serializeURL();
+
+if ($_SERVER['REQUEST_METHOD'] == "POST" || $_SERVER['REQUEST_METHOD'] == "UPDATE") {
+    $r['params'] = extractParameters();
+    // echo $_SERVER['REQUEST_METHOD'];
+}
+
 switch ($r['model']) {
     case "users":
         include_once('users.php');
@@ -24,4 +29,11 @@ function serializeURL() {
     $t = explode('?',$tail);
     parse_str($t[1], $params);
     return ['model'=>$segs[4], 'func'=>$t[0], 'params'=>$params];
+}
+
+function extractParameters() {
+    foreach ($_POST as $key => $value) {
+        $res[$key] = $value;
+    }
+    return $res;
 }

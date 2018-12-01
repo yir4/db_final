@@ -20,7 +20,7 @@ class BaseModel {
     {
         try {
             $this->result = mysqli_query($this->db->conn, $query);
-            if (! $res) {
+            if (! $this->result) {
                 $this->queryErrCode = 'ERR_FAIL';
                 $this->queryErrMsg = '';
             } else {

@@ -29,4 +29,8 @@ class Orders extends BaseModel {
         }
         echo json_encode($result);
     }
+
+    public function getOrderDetail($params) {
+        $queries = $params['params'];
+    }
 }
