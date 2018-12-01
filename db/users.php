@@ -21,7 +21,7 @@ class Users extends BaseModel {
                 $sales = $this->queryArray($sql);
                 $r = $sales;
             } else if ($res['user_permission'] == 1) {
-                $sql = "SELECT * FROM customer WHERE user_id =".$res['user_id'];
+                $sql = "SELECT * FROM customers WHERE user_id =".$res['user_id'];
                 $customer = $this->queryArray($sql);
                 $r = $customer;
             }

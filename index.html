@@ -44,7 +44,7 @@
           $.ajax({
             url: "db/index.php/users/login?username="+username+"&password="+password
           }).done(function(data) {
-              // console.log("login result:"+data);
+              console.log("login result:"+data);
               var res = JSON.parse(data);
               if (localStorage) {
                   localStorage.setItem('user', data);

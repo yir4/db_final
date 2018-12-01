@@ -5,40 +5,40 @@ function Tabs(perm, active_idx) {
         tabs = [
                     {
                         title: "Dashboard",
-                        icon: "users",
-                        link: './dashboard-sales.html'
+                        icon: "home",
+                        link: './dashboard-sales.html'+user['data']['user_id']
                     },
                    {
                        title: "Orders",
-                       icon: "users",
-                       link: './dashboard-sales.html'
+                       icon: "shopping-cart",
+                       link: './dashboard-sales.html'+user['data']['user_id']
                    },
                    {
                        title: "Comments",
-                       icon: "users",
-                       link: '#'
+                       icon: "message-square",
+                       link: './dashboard-admin.html'+user['data']['user_id']
                    },
                    {
                        title: "Sales Info",
-                       icon: "users",
-                       link: './dashboard-admin.html'
+                       icon: "user-check",
+                       link: './dashboard-admin.html'+user['data']['user_id']
                    },
                    {
                        title: "Customers Info",
                        icon: "users",
-                       link: './dashboard-admin.html'
+                       link: './dashboard-admin.html'+user['data']['user_id']
                    }
                ];
     } else if (perm == 2) {
         tabs = [
                    {
                        title: "Comments",
-                       icon: "users",
+                       icon: "message-square",
                        link: './dashboard-sales.html?sales_id='+user['data']['sales_id']
                    },
                    {
                        title: "Orders",
-                       icon: "users",
+                       icon: "shopping-cart",
                        link: './orders-list.html?sales_id='+user['data']['sales_id']
                    },
                    {
@@ -48,21 +48,25 @@ function Tabs(perm, active_idx) {
                    }
                ];
     } else if (perm == 1) {
-        tabs = [
+        tabs = [    {
+                        title: "Comments",
+                        icon: "message-square",
+                        link: './dashboard-sales.html?customer_id='+user['data']['customer_id']
+                    },
                    {
-                       title: "Comments",
-                       icon: "users",
+                       title: "Order Now",
+                       icon: "shopping-cart",
                        link: './dashboard-sales.html?customer_id='+user['data']['customer_id']
                    },
                    {
-                       title: "Orders",
-                       icon: "users",
-                       link: '#'//'./dashboard-sales.html?customer_id='+user['data']['customer_id']
+                       title: "Order History",
+                       icon: "folder",
+                       link: './dashboard-sales.html?customer_id='+user['data']['customer_id']
                    },
                    {
-                       title: "Customers Info",
-                       icon: "users",
-                       link: '#'//'./customers-list.html?customer_id='+user['data']['customer_id']
+                       title: "My Info",
+                       icon: "user",
+                       link: './customers-list.html?customer_id='+user['data']['customer_id']
                    }
                ];
     } else {
