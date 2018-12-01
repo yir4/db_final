@@ -44,7 +44,7 @@
                 <table id="customers-list" class="table table-striped table-sm">
                     <thead>
                         <tr>
-                            <th>Company name</th>
+                            <th>Business name</th>
                             <th>Contact</th>
                             <th>Phone</th>
                             <th>Function</th>
@@ -59,17 +59,33 @@
 
     <!-- User Modal -->
         <div id="userModal" class="modal fade" role="dialog">
-          <div class="modal-dialog">
+          <div class="modal-dialog modal-lg">
             <!-- Modal content-->
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Comments</h5>
+                <h5 class="modal-title">Customer Detail</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                  <div id="json-viewer"></div>
+                  <div class="container-fluid">
+                      <div class="row"><div class="col-md-4" >Business name: <span id="detailBusinessName"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Contact name: <span id="detailContactName"></span></div></div>
+                      <div class="row">
+                          <div class="col-md-4" >Email: <span id="detailEmail"></span></div>
+                          <div class="col-md-4 ml-auto">Phone: <span id="detailPhone"></span></div>
+                      </div>
+                      <div class="row"><div class="col-md-4" >Other contact infomation: <span id="detailOther"></span></div></div>
+                      <div class="row">
+                          <div class="col-md-4" >Street: <span id="detailStreet"></span></div>
+                          <div class="col-md-4 ml-auto">City: <span id="detailCity"></span></div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-4" >Province: <span id="detailProvince"></span></div>
+                          <!-- <div class="col-md-4 ml-auto">Phone: <span id="detailPhone"></span></div> -->
+                      </div>
+                  </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -269,8 +285,18 @@
 
        }
 
-        function getUserDetail() {
-
+        function getUserDetail(customer_id) {
+            for ( i = 0 ; i < customersRes.length ; i++) {
+                if (customersRes[i].customer_id == customer_id) {
+                    $('#detailBusinessName').text(customersRes[i].business_name);
+                    $('#detailContactName').text(customersRes[i].contact_name);
+                    $('#detailEmail').text(customersRes[i].email);
+                    $('#detailPhone').text(customersRes[i].phone);
+                    $('#detailStreet').text(customersRes[i].street);
+                    $('#detailCity').text(customersRes[i].city);
+                    $('#detailProvince').text(customersRes[i].province);
+                }
+            }
         }
 
         function fillUserDetail(customer_id) {
