@@ -295,6 +295,7 @@
                     $('#detailStreet').text(customersRes[i].street);
                     $('#detailCity').text(customersRes[i].city);
                     $('#detailProvince').text(customersRes[i].province);
+                    $('#detailOther').text(customersRes[i].other_contact_info);
                 }
             }
         }
@@ -331,16 +332,15 @@
                   data: data,
                   dataType: "text",
                   success: function(resultData) {
-                    console.log("Save Complete: "+resultData);
-                    // var res = JSON.parse(resultData);
-                    // if (res.code == 200) {
-                    //     // refresh page
-                    //     console.log("RELOAD");
-                    //     // TODO: pop up modal view
-                    //     location.reload();
-                    // } else {
-                    //     console.log('fail to load customers');
-                    // }
+                    // console.log("Save Complete: "+resultData);
+                    var res = JSON.parse(resultData);
+                    if (res.code == 200) {
+                        // refresh page
+                        // TODO: pop up modal view
+                        location.reload();
+                    } else {
+                        console.log('fail to load customers');
+                    }
                   }
             });
             saveData.error(function(e) { alert("Something went wrong: "+e); });
