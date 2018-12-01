@@ -41,10 +41,10 @@ class Comments extends BaseModel {
         $sales_id = $queries['sales_id'];
         $order_id = $queries['order_id'];
         $text = $queries['comment_text'];
-        $sql = "INSERT INTO comments ( order_id, sales_id, comment_text) VALUES ($order_id, $order_id, '$text')";
+        $sql = "INSERT INTO comments ( order_id, sales_id, comment_text) VALUES ($order_id, $sales_id, '$text')";
         $res = $this->query($sql);
         if ($res) {
-            echo json_encode(['code'=>200, 'message'=>'ERR_SUCCESS']);
+            echo json_encode(['code'=>200, 'message'=>'ERR_SUCCESS', 'res'=>$res, 'sql'=>$sql]);
         } else {
             echo json_encode(['code'=>404, 'message'=>'ERR_FAIL']);
         }

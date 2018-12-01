@@ -68,16 +68,28 @@
               <div class="modal-body">
                   <div class="container-fluid">
                       <div class="row">
-                          <div class="col-md-4">Product Name: Adidas AE123</div>
-                          <div class="col-md-4 ml-auto">Create Time: 2018-10-10</div>
+                          <div class="col-md-4" >Product Name: <span id="productName"></span></div>
+                          <div class="col-md-4 ml-auto">Create Time: <span id="orderTime"></span></div>
                       </div>
+                      <div class="row"><div class="col-md-4" >Status: <span id="orderStatus"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Category: <span id="categoryName"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Subcategory: <span id="subcategoryName"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Quantity: <span id="quantityNum"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Single price: <span id="singlePrice"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Total Price: <span id="totalPrice"></span></div></div>
+
                       <div class="row" style="margin-top: 16px;">
                           <div class="col-md-4" style="font-size:16px; font-style: italic;">Comments:</div>
                       </div>
                       <div class="row">
                           <div class="col-md-12">
-                              <table class="table">
+                              <table class="table" id="comments-list">
                                   <thead>
+                                      <tr>
+                                          <th>Name</th>
+                                          <th>comment</th>
+                                          <th>Time</th>
+                                      </tr>
                                   </thead>
                                   <tbody>
                                   </tbody>
@@ -98,7 +110,7 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="postComment()">Send message</button>
+                <button type="button" class="btn btn-primary" onclick="postComment()">Submit comment</button>
               </div>
             </div>
           </div>
@@ -153,20 +165,50 @@
        function drawRow(tableName, rowData) {
            var row = $("<tr />")
            $(tableName).append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
-           row.append($("<td>" + rowData.customer_id + "</td>"));
-           row.append($("<td>" + rowData.price + "</td>"));
-           row.append($("<td>" + rowData.timestamp + "</td>"));
-           row.append($("<td><a href=\"#\" onclick=\"getCommentDetail('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View Detail</a></td>"));
+            if (tableName == '#orders-list') {
+                row.append($("<td>" + rowData.customer_id + "</td>"));
+                row.append($("<td>" + rowData.price + "</td>"));
+                row.append($("<td>" + rowData.timestamp + "</td>"));
+                row.append($("<td><a href=\"#\" onclick=\"getOrderDetail('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View Detail</a></td>"));
+            } else {
+                row.append($("<td>" + rowData.contact_name + "</td>"));
+                row.append($("<td>" + rowData.comment_text + "</td>"));
+                row.append($("<td>" + rowData.comment_time + "</td>"));
+            }
        }
 
-        function getCommentDetail(order_id) {
+        function getOrderDetail(order_id) {
             cur_order_id = order_id;
-
+            $.ajax({
+              url: "../../db/index.php/orders/getOrderDetail?order_id="+order_id
+            }).done(function(data) {
+                console.log(data);
+                var commentTable = '#comments-list';
+                 clearTable(commentTable);
+                 var res = JSON.parse(data);
+                 if (res.code == 200) {
+                     drawTable(commentTable, res.data.comments);
+                     $("#productName").text(res.data.product_name);
+                     $("#orderTime").text(res.data.timestamp); //orderStatus
+                     $("#orderStatus").text(res.data.status);
+                     $("#categoryName").text(res.data.category_name);
+                     $("#subcategoryName").text(res.data.sub_category_name);
+                     $("#quantityNum").text(res.data.quantity);
+                     $("#singlePrice").text(res.data.single_price);
+                     $("#totalPrice").text(res.data.total_price);
+                 } else {
+                     console.log('fail to load comments');
+                 }
+            });
         }
 
         function postComment() {
             var text = $('textarea#message-text').val();
-            var data = { "order_id": cur_order_id, "sales_id": params['sales_id'], "comment_text": text};
+            if (text == "" || text == null) {
+                alert("Please enter your comment");
+                return;
+            }
+            var data = { "order_id": cur_order_id, "sales_id": user['data']['sales_id'], "comment_text": text};
             var saveData = $.ajax({
                   type: 'POST',
                   url: "../../db/index.php/comments/postComment",
