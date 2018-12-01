@@ -51,22 +51,22 @@ function Tabs(perm, active_idx) {
         tabs = [    {
                         title: "Comments",
                         icon: "message-square",
-                        link: './dashboard-sales.html?customer_id='+user['data']['customer_id']
+                        link: './dashboard-customers.html?customer_id='+user['data']['customer_id']
                     },
                    {
                        title: "Order Now",
                        icon: "shopping-cart",
-                       link: './dashboard-sales.html?customer_id='+user['data']['customer_id']
+                       link: './order-now.html?customer_id='+user['data']['customer_id']
                    },
                    {
                        title: "Order History",
                        icon: "folder",
-                       link: './dashboard-sales.html?customer_id='+user['data']['customer_id']
+                       link: './order-history.html?customer_id='+user['data']['customer_id']
                    },
                    {
                        title: "My Info",
                        icon: "user",
-                       link: './customers-list.html?customer_id='+user['data']['customer_id']
+                       link: './my-info.html?customer_id='+user['data']['customer_id']
                    }
                ];
     } else {
