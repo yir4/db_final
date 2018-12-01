@@ -36,6 +36,9 @@
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Customers List</h1>
+                <div class="col-md-2 ml-auto">
+                    <button class="btn btn-info" type="button" name="button" data-toggle="modal" data-target="#addCustomer">Add Customer</button>
+                </div>
             </div>
             <div class="table-responsive">
                 <table id="customers-list" class="table table-striped table-sm">
@@ -74,6 +77,71 @@
             </div>
           </div>
         </div>
+
+        <!-- add Customer Modal -->
+        <div id="addCustomer" class="modal fade" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Create New Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <div class="col-md-12">
+                      <form>
+                          <div class="form-group">
+                              <label for="business_name" class="col-form-label">Business name:</label>
+                              <input class="form-control" id="business_name">
+                          </div>
+                          <div class="form-group">
+                              <label for="addr_stree" class="col-form-label">Street:</label>
+                              <input class="form-control" id="addr_stree">
+                          </div>
+                          <div class="form-group">
+                              <label for="addr_city" class="col-form-label">City:</label>
+                              <input class="form-control" id="addr_city">
+                          </div>
+                          <div class="form-group">
+                              <label for="addr_province" class="col-form-label">Province:</label>
+                              <input class="form-control" id="addr_province">
+                          </div>
+                          <div class="form-group">
+                              <label for="contact_name" class="col-form-label">Contact name:</label>
+                              <input class="form-control" id="contact_name">
+                          </div>
+                          <div class="form-group">
+                              <label for="email" class="col-form-label">Email:</label>
+                              <input class="form-control" id="email">
+                          </div>
+                          <div class="form-group">
+                              <label for="phone" class="col-form-label">Phone:</label>
+                              <input class="form-control" id="phone">
+                          </div>
+                          <div class="form-group">
+                              <label for="other_contact_info" class="col-form-label">Other Contact Info:</label>
+                              <input class="form-control" id="other_contact_info">
+                          </div>
+                          <div class="form-group">
+                              <label for="login_account" class="col-form-label">Login user name:</label>
+                              <input class="form-control" id="login_account">
+                          </div>
+                          <div class="form-group">
+                              <label for="login_password" class="col-form-label">Login password:</label>
+                              <input class="form-control" id="login_password">
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createNewCustomer()">Create</button>
+              </div>
+            </div>
+          </div>
+        </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -91,13 +159,14 @@
     <script>
        var tableName = '#customers-list';
        var params;
+       var user = JSON.parse(localStorage.getItem('user'));
        render();
 
        function render() {
            var params = getUrlVars();
            console.log(params['sales_id']);
            $.ajax({
-             url: "../../db/index.php/customer/getCustomersBySales?sales_id="+params['sales_id']
+             url: "../../db/index.php/customers/getCustomersBySales?sales_id="+params['sales_id']
            }).done(function(data) {
                console.log(data);
                 clearTable(tableName);
@@ -131,6 +200,41 @@
 
         function getCommentDetail() {
 
+        }
+
+        function createNewCustomer() {
+            console.log("createNewCustomer");
+            var data = { "business_name": $('#business_name').val(),
+                         "street": $('#addr_stree').val(),
+                         "city": $('#addr_city').val(),
+                         "province": $('#addr_province').val(),
+                         "contact_name": $('#contact_name').val(),
+                         "email": $('#email').val(),
+                         "phone": $('#phone').val(),
+                         "other_contact_info": $('#other_contact_info').val(),
+                         "login_account": $('#login_account').val(),
+                         "login_password": $('#login_password').val(),
+                         "sales_id": user['data']['sales_id']};
+                         console.log(data);
+            var saveData = $.ajax({
+                  type: 'POST',
+                  url: "../../db/index.php/customers/createNewCustomer",
+                  data: data,
+                  dataType: "text",
+                  success: function(resultData) {
+                    console.log("Save Complete: "+resultData);
+                    var res = JSON.parse(resultData);
+                    if (res.code == 200) {
+                        // refresh page
+                        console.log("RELOAD");
+                        // TODO: pop up modal view
+                        location.reload();
+                    } else {
+                        console.log('fail to load customers');
+                    }
+                  }
+            });
+            saveData.error(function(e) { alert("Something went wrong: "+e); });
         }
 
        function getUrlVars() {

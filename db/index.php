@@ -16,9 +16,9 @@ switch ($r['model']) {
     case "orders":
         include_once('orders.php');
         return new Orders($r);
-    case "customer":
-        include_once('customer.php');
-        return new Customer($r);
+    case "customers":
+        include_once('customers.php');
+        return new Customers($r);
     case "products":
         include_once('products.php');
         return new Products($r);

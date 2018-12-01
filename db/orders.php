@@ -11,7 +11,7 @@ class Orders extends BaseModel {
     public function getOrdersBySales($params) {
         $queries = $params['params'];
         $sales_id = $queries['sales_id'];
-        $sql = "SELECT customer_id FROM customer WHERE sales_id = $sales_id";
+        $sql = "SELECT customer_id FROM customers WHERE sales_id = $sales_id";
         $res = $this->queryArrays($sql);
 
         if ($res) {

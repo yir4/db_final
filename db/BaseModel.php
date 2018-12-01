@@ -193,7 +193,7 @@ class BaseModel {
             if (strval($v) == "now()") {
                 $vals[] = "now()";
             } else {
-                $vals[] = "'".$this->escapeString($v)."'";
+                $vals[] = "'".$v."'";//"'".$this->escapeString($v)."'";
             }
         }
         return "INSERT INTO `$tbl` (".implode(",", $cols).") VALUES (".implode(",", $vals).")";
