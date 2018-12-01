@@ -55,8 +55,8 @@
         </main>
     </div>
 
-    <!-- User Modal -->
-        <div id="userModal" class="modal fade" role="dialog">
+    <!-- Order detail Modal -->
+        <div id="viewOrderDetail" class="modal fade" role="dialog">
           <div class="modal-dialog modal-lg">
             <!-- Modal content-->
             <div class="modal-content">
@@ -123,7 +123,7 @@
             <!-- Modal content-->
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Update Order</h5>
+                <h5 class="modal-title">Update Order Status</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -132,10 +132,10 @@
                   <div class="col-md-12">
                       <form>
                           <div class="form-group">
-                              <label for="business_nameU" class="col-form-label">Business name:</label>
-                              <input class="form-control" id="business_nameU">
+                              <label for="order_current_status" class="col-form-label">Order status:</label>
+                              <input class="form-control" id="order_current_status">
                           </div>
-                          <div class="form-group">
+                          <!-- <div class="form-group">
                               <label for="addr_stree" class="col-form-label">Street:</label>
                               <input class="form-control" id="addr_streeU">
                           </div>
@@ -158,7 +158,7 @@
                                   <div id="dropdownSubcategoryContent" class="dropdown-menu dropdown-menu-subcate" aria-labelledby="dropdownMenuButton">
                                   </div>
                                 </div>
-                          </div>
+                          </div> -->
                       </form>
                   </div>
               </div>
@@ -190,6 +190,7 @@
         var cur_order_id;
         var categorys;
         var subcategorys;
+        var orders;
         render();
         getCategory();
         getSubcategory();
@@ -204,6 +205,7 @@
                 var res = JSON.parse(data);
                 if (res.code == 200) {
                     drawTable(tableName, res.data);
+                    orders = res.data;
                 } else {
                     console.log('fail to load comments');
                 }
@@ -227,8 +229,8 @@
                 row.append($("<td>" + rowData.customer_id + "</td>"));
                 row.append($("<td>" + rowData.price + "</td>"));
                 row.append($("<td>" + rowData.timestamp + "</td>"));
-                row.append($("<div><td><a href=\"#\" onclick=\"getOrderDetail('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View</a>"+
-                                       "<a href=\"#\" style=\"margin-left:8px\" onclick=\"getOrderDetailwithoutComments('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#editOrder\">Edit</a></td></div>"));
+                row.append($("<div><td><a href=\"#\" onclick=\"getOrderDetail('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#viewOrderDetail\">View</a>"+
+                                       "<a href=\"#\" style=\"margin-left:8px\" onclick=\"fillOrderStatus('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#editOrder\">Edit</a></td></div>"));
             } else {
                 row.append($("<td>" + rowData.contact_name + "</td>"));
                 row.append($("<td>" + rowData.comment_text + "</td>"));
@@ -238,36 +240,49 @@
 
         function updateOrderDetail() {
             console.log("updateOrderDetail");
+            //order_status
         }
 
-        function getOrderDetailwithoutComments(order_id) {
-            cur_order_id = order_id;
-            $.ajax({
-              url: "../../db/index.php/orders/getOrderDetailNoComments?order_id="+order_id
-            }).done(function(data) {
-                console.log(data);
-                //<a class="dropdown-item" href="#">woven</a>
-                // var commentTable = '#comments-list';
-                //  clearTable(commentTable);
-                //  var res = JSON.parse(data);
-                //  if (res.code == 200) {
-                //      drawTable(commentTable, res.data.comments);
-                //      $("#productName").text(res.data.product_name);
-                //      $("#orderTime").text(res.data.timestamp); //orderStatus
-                //      $("#orderStatus").text(res.data.status);
-                //      $("#categoryName").text(res.data.category_name);
-                //      $("#subcategoryName").text(res.data.sub_category_name);
-                //      $("#quantityNum").text(res.data.quantity);
-                //      $("#singlePrice").text(res.data.single_price);
-                //      $("#totalPrice").text(res.data.total_price);
-                //  } else {
-                //      console.log('fail to load comments');
-                //  }
-            });
+        function fillOrderStatus(order_id) {
+            console.log(orders.length);
+            for ( i = 0 ; i < orders.length ; i++ ){
+                console.log("dwdq"+orders[i].order_id);
+                if (orders[i].order_id == order_id) {
+                    console.log("dwdq"+orders[i].status);
+                    $('#order_current_status').val(orders[i].status);
+                }
+            }
+
         }
+        // function getOrderDetailwithoutComments(order_id) {
+        //     cur_order_id = order_id;
+        //     $.ajax({
+        //       url: "../../db/index.php/orders/getOrderDetailNoComments?order_id="+order_id
+        //     }).done(function(data) {
+        //         console.log(data);
+        //         //<a class="dropdown-item" href="#">woven</a>
+        //         // var commentTable = '#comments-list';
+        //         //  clearTable(commentTable);
+        //         //  var res = JSON.parse(data);
+        //         //  if (res.code == 200) {
+        //         //      drawTable(commentTable, res.data.comments);
+        //         //      $("#productName").text(res.data.product_name);
+        //         //      $("#orderTime").text(res.data.timestamp); //orderStatus
+        //         //      $("#orderStatus").text(res.data.status);
+        //         //      $("#categoryName").text(res.data.category_name);
+        //         //      $("#subcategoryName").text(res.data.sub_category_name);
+        //         //      $("#quantityNum").text(res.data.quantity);
+        //         //      $("#singlePrice").text(res.data.single_price);
+        //         //      $("#totalPrice").text(res.data.total_price);
+        //         //  } else {
+        //         //      console.log('fail to load comments');
+        //         //  }
+        //     });
+        // }
 
         function getOrderDetail(order_id) {
             cur_order_id = order_id;
+            console.log(order_id);
             $.ajax({
               url: "../../db/index.php/orders/getOrderDetail?order_id="+order_id
             }).done(function(data) {
@@ -360,30 +375,30 @@
            return vars;
        }
 
-       $(function(){
-        $(".dropdown-menu-cate").on('click', 'a', function(){
-            $("#dropdownCategory").text($(this).text());
-            $("#dropdownCategory").val($(this).val());
-            var dropdown = $('#dropdownSubcategoryContent');
-            dropdown.empty();
-            $("#dropdownSubcategory").text("Choose subcategory");
-            $("#dropdownSubcategory").val(null);
-            for( i = 0 ; i < subcategorys.length ; i++ ) {
-                if (subcategorys[i].category_id == $(this).val()) {
-                    dropdown.append(
-                        $('<a class="dropdown-item" href="#"></a>').val(subcategorys[i].sub_category_id).html(subcategorys[i].sub_category_name)
-                    );
-                }
-            }
-            });
-        });
-
-        $(function(){
-         $(".dropdown-menu-subcate").on('click', 'a', function(){
-             $("#dropdownSubcategory").text($(this).text());
-             $("#dropdownSubcategory").val($(this).val());
-             });
-         });
+       // $(function(){
+       //  $(".dropdown-menu-cate").on('click', 'a', function(){
+       //      $("#dropdownCategory").text($(this).text());
+       //      $("#dropdownCategory").val($(this).val());
+       //      var dropdown = $('#dropdownSubcategoryContent');
+       //      dropdown.empty();
+       //      $("#dropdownSubcategory").text("Choose subcategory");
+       //      $("#dropdownSubcategory").val(null);
+       //      for( i = 0 ; i < subcategorys.length ; i++ ) {
+       //          if (subcategorys[i].category_id == $(this).val()) {
+       //              dropdown.append(
+       //                  $('<a class="dropdown-item" href="#"></a>').val(subcategorys[i].sub_category_id).html(subcategorys[i].sub_category_name)
+       //              );
+       //          }
+       //      }
+       //      });
+       //  });
+       //
+       //  $(function(){
+       //   $(".dropdown-menu-subcate").on('click', 'a', function(){
+       //       $("#dropdownSubcategory").text($(this).text());
+       //       $("#dropdownSubcategory").val($(this).val());
+       //       });
+       //   });
     </script>
   </body>
 </html>

@@ -55,22 +55,63 @@
         </main>
     </div>
 
-    <!-- User Modal -->
-        <div id="userModal" class="modal fade" role="dialog">
-          <div class="modal-dialog">
+    <!-- Order detail Modal -->
+        <div id="viewOrderDetail" class="modal fade" role="dialog">
+          <div class="modal-dialog modal-lg">
             <!-- Modal content-->
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Customer</h5>
+                <h5 class="modal-title">Order detail</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                  <div id="json-viewer"></div>
+                  <div class="container-fluid">
+                      <div class="row">
+                          <div class="col-md-4" >Product Name: <span id="productName"></span></div>
+                          <div class="col-md-4 ml-auto">Create Time: <span id="orderTime"></span></div>
+                      </div>
+                      <div class="row"><div class="col-md-4" >Status: <span id="orderStatus"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Category: <span id="categoryName"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Subcategory: <span id="subcategoryName"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Quantity: <span id="quantityNum"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Single price: <span id="singlePrice"></span></div></div>
+                      <div class="row"><div class="col-md-4" >Total Price: <span id="totalPrice"></span></div></div>
+
+                      <div class="row" style="margin-top: 16px;">
+                          <div class="col-md-4" style="font-size:16px; font-style: italic;">Comments:</div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12">
+                              <table class="table" id="detail-comments-list">
+                                  <thead>
+                                      <tr>
+                                          <th>Name</th>
+                                          <th>comment</th>
+                                          <th>Time</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12">
+                              <form>
+                                  <div class="form-group">
+                                      <label for="message-text" class="col-form-label">New comments:</label>
+                                      <textarea class="form-control" id="message-text"></textarea>
+                                  </div>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="postComment()">Submit comment</button>
               </div>
             </div>
           </div>
@@ -90,7 +131,7 @@
     </script>
 
     <script>
-       var tableName = '#comments-list';
+       // var tableName = '#comments-list';
        var params;
        render();
        function render() {
@@ -100,10 +141,10 @@
              url: "../../db/index.php/comments/getComments?sales_id="+params['sales_id']
            }).done(function(data) {
                console.log(data);
-                clearTable(tableName);
+                clearTable('#comments-list');
                 var res = JSON.parse(data);
                 if (res.code == 200) {
-                    drawTable(tableName, res.data);
+                    drawTable('#comments-list', res.data);
                 } else {
                     console.log('fail to load comments');
                 }
@@ -124,14 +165,42 @@
        function drawRow(tableName, rowData) {
            var row = $("<tr />")
            $(tableName).append(row); //this will append tr element to table... keep its reference for a while since we will add cels into it
-           row.append($("<td>" + rowData.comment_id + "</td>"));
-           row.append($("<td>" + rowData.comment_text + "</td>"));
-           row.append($("<td>" + rowData.comment_time + "</td>"));
-           row.append($("<td><a href=\"#\" onclick=\"getCommentDetail('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View Detail</a></td>"));
+           if (tableName == '#comments-list') {
+               row.append($("<td>" + rowData.comment_id + "</td>"));
+               row.append($("<td>" + rowData.comment_text + "</td>"));
+               row.append($("<td>" + rowData.comment_time + "</td>"));
+               row.append($("<td><a href=\"#\" onclick=\"getOrderDetail('"+rowData.order_id+"');\" data-toggle=\"modal\" data-target=\"#viewOrderDetail\">View Order Detail</a></td>"));
+           } else {
+               row.append($("<td>" + rowData.contact_name + "</td>"));
+               row.append($("<td>" + rowData.comment_text + "</td>"));
+               row.append($("<td>" + rowData.comment_time + "</td>"));
+           }
+
        }
 
-        function getCommentDetail() {
-
+        function getOrderDetail(order_id) {
+            console.log(order_id);
+            $.ajax({
+              url: "../../db/index.php/orders/getOrderDetail?order_id="+order_id
+            }).done(function(data) {
+                console.log("getOrderDetail"+data);
+                var commentTable = '#detail-comments-list';
+                 clearTable(commentTable);
+                 var res = JSON.parse(data);
+                 if (res.code == 200) {
+                     drawTable(commentTable, res.data.comments);
+                     $("#productName").text(res.data.product_name);
+                     $("#orderTime").text(res.data.timestamp); //orderStatus
+                     $("#orderStatus").text(res.data.status);
+                     $("#categoryName").text(res.data.category_name);
+                     $("#subcategoryName").text(res.data.sub_category_name);
+                     $("#quantityNum").text(res.data.quantity);
+                     $("#singlePrice").text(res.data.single_price);
+                     $("#totalPrice").text(res.data.total_price);
+                 } else {
+                     console.log('fail to load comments');
+                 }
+            });
         }
 
        function getUrlVars() {
