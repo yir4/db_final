@@ -230,11 +230,11 @@ class BaseModel {
             if (strval($v) == "now()") {
                 $cols[] = '`'.$this->ascii_only($k).'`='."now()";
             } else {
-                $cols[] = '`'.$this->ascii_only($k).'`='."'".$this->escapeString($v)."'";
+                $cols[] = '`'.$this->ascii_only($k).'`='."'".$v."'";
             }
         }
         foreach ($keys as $k) {
-            $vals[] = '`'.$this->ascii_only($k).'`='."'".$this->escapeString($rec[$k])."'";
+            $vals[] = '`'.$this->ascii_only($k).'`='."'".$rec[$k]."'";
         }
         return "UPDATE `$tbl` SET ".implode(",", $cols)." WHERE ".implode(" AND ", $vals);
     }

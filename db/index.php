@@ -1,7 +1,7 @@
 <?
 $r = serializeURL();
 
-if ($_SERVER['REQUEST_METHOD'] == "POST" || $_SERVER['REQUEST_METHOD'] == "UPDATE") {
+if ($_SERVER['REQUEST_METHOD'] === "POST" || $_SERVER['REQUEST_METHOD'] === "PUT") {
     $r['params'] = extractParameters();
     // echo $_SERVER['REQUEST_METHOD'];
 }
@@ -35,7 +35,13 @@ function serializeURL() {
 }
 
 function extractParameters() {
-    foreach ($_POST as $key => $value) {
+    $target = [];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $target = $_POST;
+    } else {
+        parse_str(file_get_contents("php://input"),$target);
+    }
+    foreach ($target as $key => $value) {
         $res[$key] = $value;
     }
     return $res;

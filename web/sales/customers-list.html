@@ -142,6 +142,72 @@
             </div>
           </div>
         </div>
+
+
+        <!-- update Customer Modal -->
+        <div id="editUserModal" class="modal fade" role="dialog">
+          <div class="modal-dialog modal-lg">
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Update Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <div class="col-md-12">
+                      <form>
+                          <div class="form-group">
+                              <label for="business_nameU" class="col-form-label">Business name:</label>
+                              <input class="form-control" id="business_nameU">
+                          </div>
+                          <div class="form-group">
+                              <label for="addr_stree" class="col-form-label">Street:</label>
+                              <input class="form-control" id="addr_streeU">
+                          </div>
+                          <div class="form-group">
+                              <label for="addr_city" class="col-form-label">City:</label>
+                              <input class="form-control" id="addr_cityU">
+                          </div>
+                          <div class="form-group">
+                              <label for="addr_province" class="col-form-label">Province:</label>
+                              <input class="form-control" id="addr_provinceU">
+                          </div>
+                          <div class="form-group">
+                              <label for="contact_name" class="col-form-label">Contact name:</label>
+                              <input class="form-control" id="contact_nameU">
+                          </div>
+                          <div class="form-group">
+                              <label for="email" class="col-form-label">Email:</label>
+                              <input class="form-control" id="emailU">
+                          </div>
+                          <div class="form-group">
+                              <label for="phone" class="col-form-label">Phone:</label>
+                              <input class="form-control" id="phoneU">
+                          </div>
+                          <div class="form-group">
+                              <label for="other_contact_info" class="col-form-label">Other Contact Info:</label>
+                              <input class="form-control" id="other_contact_infoU">
+                          </div>
+                          <div class="form-group">
+                              <label for="login_account" class="col-form-label">Login user name:</label>
+                              <input class="form-control" id="login_accountU">
+                          </div>
+                          <div class="form-group">
+                              <label for="login_password" class="col-form-label">Login password:</label>
+                              <input class="form-control" id="login_passwordU">
+                          </div>
+                      </form>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="updateUserDetail()">Update</button>
+              </div>
+            </div>
+          </div>
+        </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -160,6 +226,8 @@
        var tableName = '#customers-list';
        var params;
        var user = JSON.parse(localStorage.getItem('user'));
+       var customersRes;
+       var cur_customer;
        render();
 
        function render() {
@@ -172,6 +240,7 @@
                 clearTable(tableName);
                 var res = JSON.parse(data);
                 if (res.code == 200) {
+                    customersRes = res.data;
                     drawTable(tableName, res.data);
                 } else {
                     console.log('fail to load customers');
@@ -195,26 +264,65 @@
            row.append($("<td>" + rowData.business_name + "</td>"));
            row.append($("<td>" + rowData.contact_name + "</td>"));
            row.append($("<td>" + rowData.phone + "</td>"));
-           row.append($("<td><a href=\"#\" onclick=\"getCommentDetail('"+rowData.customer_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View Detail</a></td>"));
+           row.append($("<div><td><a href=\"#\" onclick=\"getUserDetail('"+rowData.customer_id+"');\" data-toggle=\"modal\" data-target=\"#userModal\">View</a></td>"+
+                             "<td><a href=\"#\" style=\"margin-left:4px\" onclick=\"fillUserDetail('"+rowData.customer_id+"');\" data-toggle=\"modal\" data-target=\"#editUserModal\">Edit</a></td></div>"));
+
        }
 
-        function getCommentDetail() {
+        function getUserDetail() {
 
+        }
+
+        function fillUserDetail(customer_id) {
+            console.log("fillUserDetail: "+customer_id);
+            for ( i = 0 ; i < customersRes.length ; i++) {
+                if (customersRes[i].customer_id == customer_id) {
+                    cur_customer = customersRes[i];
+                    $('#business_nameU').val(customersRes[i].business_name);
+                    $('#addr_streeU').val(customersRes[i].street);
+                    $('#addr_cityU').val(customersRes[i].city);
+                    $('#addr_provinceU').val(customersRes[i].province);
+                    $('#contact_nameU').val(customersRes[i].contact_name);
+                    $('#emailU').val(customersRes[i].email);
+                    $('#phoneU').val(customersRes[i].phone);
+                    $('#other_contact_infoU').val(customersRes[i].other_contact_info);
+                    $('#login_accountU').val(customersRes[i].login_account);
+                    $('#login_passwordU').val(customersRes[i].login_password);
+                    return;
+                }
+            }
+        }
+
+        function updateUserDetail() {
+            console.log("updateUserDetail");
+            var data = wrapCustomerInfo("U");
+            data['customer_id'] = cur_customer['customer_id'];
+            data['user_id'] = cur_customer['user_id'];
+            console.log(data);
+            var saveData = $.ajax({
+                  type: 'PUT',
+                  url: "../../db/index.php/customers/updateCustomer",
+                  data: data,
+                  dataType: "text",
+                  success: function(resultData) {
+                    console.log("Save Complete: "+resultData);
+                    // var res = JSON.parse(resultData);
+                    // if (res.code == 200) {
+                    //     // refresh page
+                    //     console.log("RELOAD");
+                    //     // TODO: pop up modal view
+                    //     location.reload();
+                    // } else {
+                    //     console.log('fail to load customers');
+                    // }
+                  }
+            });
+            saveData.error(function(e) { alert("Something went wrong: "+e); });
         }
 
         function createNewCustomer() {
             console.log("createNewCustomer");
-            var data = { "business_name": $('#business_name').val(),
-                         "street": $('#addr_stree').val(),
-                         "city": $('#addr_city').val(),
-                         "province": $('#addr_province').val(),
-                         "contact_name": $('#contact_name').val(),
-                         "email": $('#email').val(),
-                         "phone": $('#phone').val(),
-                         "other_contact_info": $('#other_contact_info').val(),
-                         "login_account": $('#login_account').val(),
-                         "login_password": $('#login_password').val(),
-                         "sales_id": user['data']['sales_id']};
+            var data = wrapCustomerInfo("");
                          console.log(data);
             var saveData = $.ajax({
                   type: 'POST',
@@ -235,6 +343,20 @@
                   }
             });
             saveData.error(function(e) { alert("Something went wrong: "+e); });
+        }
+
+        function wrapCustomerInfo(postfix) {
+            return { "business_name": $('#business_name'+postfix).val(),
+                         "street": $('#addr_stree'+postfix).val(),
+                         "city": $('#addr_city'+postfix).val(),
+                         "province": $('#addr_province'+postfix).val(),
+                         "contact_name": $('#contact_name'+postfix).val(),
+                         "email": $('#email'+postfix).val(),
+                         "phone": $('#phone'+postfix).val(),
+                         "other_contact_info": $('#other_contact_info'+postfix).val(),
+                         "login_account": $('#login_account'+postfix).val(),
+                         "login_password": $('#login_password'+postfix).val(),
+                         "sales_id": user['data']['sales_id']};
         }
 
        function getUrlVars() {
